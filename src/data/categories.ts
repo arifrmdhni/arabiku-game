@@ -1,0 +1,58 @@
+import { Category } from "@/types"
+
+export const categories: Category[] = [
+  {
+    id: "cat-1",
+    name: "Kosakata Al-Quran & Doa",
+    slug: "al-quran",
+    description: "Frasa yang sering muncul dalam Al-Quran dan doa sehari-hari",
+    icon: "📖",
+    wordCount: 50,
+    color: "#1B6CA8",
+  },
+  {
+    id: "cat-2",
+    name: "Kehidupan Sehari-hari",
+    slug: "kehidupan",
+    description: "Keluarga, makanan, pakaian, rumah, pekerjaan",
+    icon: "🏠",
+    wordCount: 50,
+    color: "#2E8B57",
+  },
+  {
+    id: "cat-3",
+    name: "Alam & Lingkungan",
+    slug: "alam",
+    description: "Hewan, tumbuhan, cuaca, benda alam",
+    icon: "🌿",
+    wordCount: 50,
+    color: "#D4A017",
+  },
+  {
+    id: "cat-4",
+    name: "Angka, Waktu & Warna",
+    slug: "angka-waktu",
+    description: "Bilangan, hari, bulan, warna, ukuran",
+    icon: "🔢",
+    wordCount: 50,
+    color: "#8E44AD",
+  },
+  {
+    id: "cat-5",
+    name: "Percakapan Dasar",
+    slug: "percakapan",
+    description: "Salam, pertanyaan umum, ekspresi sosial",
+    icon: "💬",
+    wordCount: 50,
+    color: "#E67E22",
+  },
+  {
+    id: "cat-6",
+    name: "Haji & Umrah",
+    slug: "haji-umrah",
+    description: "Istilah ritual, tempat suci, frasa perjalanan",
+    icon: "🕌",
+    wordCount: 50,
+    color: "#C0392B",
+  },
+]

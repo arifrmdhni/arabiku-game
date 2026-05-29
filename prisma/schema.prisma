@@ -1,0 +1,146 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id          String   @id @default(uuid())
+  email       String   @unique
+  username    String   @unique
+  password    String?
+  avatarUrl   String?
+  level       Int      @default(1)
+  totalXp     Int      @default(0)
+  streakCount Int      @default(0)
+  lastActive  DateTime?
+  createdAt   DateTime @default(now())
+  image       String?
+
+  accounts          Account[]
+  sessions          Session[]
+  wordProgress      WordProgress[]
+  gameSessions      GameSession[]
+  userAchievements  UserAchievement[]
+}
+
+model Account {
+  id                String  @id @default(uuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @default("")
+  access_token      String? @default("")
+  expires_at        Int?
+  token_type        String? @default("")
+  scope             String? @default("")
+  id_token          String? @default("")
+  session_state     String? @default("")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Category {
+  id          String  @id @default(uuid())
+  name        String
+  slug        String  @unique
+  description String?
+  icon        String  @default("📖")
+  wordCount   Int     @default(0)
+  color       String  @default("#1B6CA8")
+
+  words        Word[]
+  gameSessions GameSession[]
+}
+
+model Word {
+  id              String  @id @default(uuid())
+  arabicText      String
+  transliteration String
+  translationId   String
+  translationEn   String?
+  categoryId      String
+  difficulty      Int     @default(1)
+  audioUrl        String?
+  imageUrl        String?
+  isPublished     Boolean @default(true)
+
+  category      Category       @relation(fields: [categoryId], references: [id])
+  wordProgress  WordProgress[]
+}
+
+model WordProgress {
+  id           String   @id @default(uuid())
+  userId       String
+  wordId       String
+  timesSeen    Int      @default(0)
+  timesCorrect Int      @default(0)
+  easiness     Float    @default(2.5)
+  interval     Int      @default(1)
+  nextReview   DateTime?
+  lastReviewed DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  word Word @relation(fields: [wordId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, wordId])
+}
+
+model GameSession {
+  id           String   @id @default(uuid())
+  userId       String
+  gameType     String
+  categoryId   String?
+  wordsShown   Int      @default(0)
+  correctCount Int      @default(0)
+  xpEarned     Int      @default(0)
+  durationSec  Int      @default(0)
+  completedAt  DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category Category? @relation(fields: [categoryId], references: [id])
+}
+
+model Achievement {
+  id          String  @id @default(uuid())
+  name        String
+  description String?
+  icon        String  @default("🏅")
+  xpReward    Int     @default(0)
+
+  userAchievements UserAchievement[]
+}
+
+model UserAchievement {
+  id            String   @id @default(uuid())
+  userId        String
+  achievementId String
+  unlockedAt    DateTime @default(now())
+
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievement Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, achievementId])
+}
